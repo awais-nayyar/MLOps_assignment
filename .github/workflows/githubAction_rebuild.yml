@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-name: Publish Docker image
-=======
 name: Rebuild Docker image
->>>>>>> b5a39024ddfa9a06380b901173c11301385722ee
-
 on:
   push:
     branches: ['master']
@@ -26,12 +21,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-<<<<<<< HEAD
           images: awi001/mlops_translator
-=======
-          images: awi001/mlops_assignment
-
->>>>>>> b5a39024ddfa9a06380b901173c11301385722ee
       
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
@@ -39,8 +29,4 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-<<<<<<< HEAD
           labels: ${{ steps.meta.outputs.labels }}
-=======
-          labels: ${{ steps.meta.outputs.labels }}
->>>>>>> b5a39024ddfa9a06380b901173c11301385722ee
