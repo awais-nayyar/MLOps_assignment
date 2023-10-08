@@ -20,11 +20,11 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: username/container
+          tags: awi001/mlops_translator
       - name: Run the build process with Docker
         uses: addnab/docker-run-action@v3
         with:
-          image: username/container:latest
+          image: awi001/mlops_translator
           options: -v ${{ github.workspace }}:/data
           run: |
             echo "Love you Mom!"
