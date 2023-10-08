@@ -1,23 +1,30 @@
-from transformers import pipeline
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
-from pydantic import BaseModel
-
-generator = pipeline('text-generation', model='openai-gpt')
+from transformers import MarianTokenizer, MarianMTModel
 
 app = FastAPI()
 
+# Translation model
+translation_model_name = "Helsinki-NLP/opus-mt-en-de"
+tokenizer = MarianTokenizer.from_pretrained(translation_model_name)
+translation_model = MarianMTModel.from_pretrained(translation_model_name)
 
-class Body(BaseModel):
+class TranslationRequest:
     text: str
 
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to the translation service!"}
 
-@app.get('/')
-def root():
-    return HTMLResponse("<h1>A self-documenting API to interact with a GPT2 model and generate text</h1>")
+@app.post("/translate")
+def translate_text(request: TranslationRequest):
+    try:
+        inputs = tokenizer.encode(request.text, return_tensors="pt")
+        translation = translation_model.generate(inputs, max_length=100)[0]
+        translated_text = tokenizer.decode(translation, skip_special_tokens=True)
+        return {"translation": translated_text}
+    except Exception as e:
+        return {"error": "Translation failed"}
 
-
-@app.post('/generate')
-def predict(body: Body):
-    results = generator(body.text, max_length=35, num_return_sequences=1)
-    return results[0]
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=80)

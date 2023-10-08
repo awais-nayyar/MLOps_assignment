@@ -8,6 +8,8 @@ RUN pip install -r requirements.txt
 
 COPY webapp/* /webapp
 
-ENTRYPOINT [ "uvicorn" ]
+EXPOSE 80
 
-CMD [ "--host", "0.0.0.0", "main:app" ]
+ENTRYPOINT ["uvicorn"]
+
+CMD ["main:app", "--host", "0.0.0.0", "--port", "80"]
